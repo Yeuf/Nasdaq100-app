@@ -39,6 +39,20 @@ streamlit run app.py
 
 This will open a browser window where you can interact with the app.
 
+## Screenshots
+
+![Industry selection](/IMG/Industry_selection.png)
+
+![dataframe](/IMG/dataframe.png)
+
+![peg](/IMG/peg.png)
+
+![Wide peg](/IMG/peg_wide.png)
+
+![Forward PE](/IMG/ForwardPE.png)
+
+![wide forward PE](/IMG/Forward_PE_wide.png)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
