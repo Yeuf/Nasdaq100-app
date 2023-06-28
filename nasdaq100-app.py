@@ -36,8 +36,14 @@ def load_data():
     # Collect data on symbol, forwardPE, and pegRatio for each ticker
     for i in tickers:
         symbol.append(i.info['symbol'])
-        forwardPE.append(i.info['forwardPE'])
-        pegRatio.append(i.info['pegRatio'])
+        try:
+            forwardPE.append(i.info['forwardPE'])
+        except KeyError:
+            forwardPE.append(0)
+        try:
+            pegRatio.append(i.info['pegRatio'])
+        except KeyError:
+            pegRatio.append(0)
 
     # Create a DataFrame with the collected data
     df_data = pd.DataFrame(columns=['Ticker', 'ForwardPE', 'PegRatio'])
