@@ -29,7 +29,16 @@ You can install them using pip:
 pip install -r requirements.txt
 ```
 
+Alternatively, you can use Docker to run the app. Make sure you have Docker installed on your machine. Run the following command in your terminal:
+
+```bash
+docker pull ghcr.io/yeuf/nasdaq100-app:master
+```
+This will download the Docker image for the app.
+
 ## Usage
+
+### Running Locally
 
 To run this app, you need to clone this repository and run the following command in your terminal:
 
@@ -38,6 +47,16 @@ streamlit run app.py
 ```
 
 This will open a browser window where you can interact with the app.
+
+### Using Docker
+
+To run the app using Docker, run the following command in your terminal:
+
+```bash
+docker run -p 8501:8501 ghcr.io/yeuf/nasdaq100-app:master
+```
+
+This will start the app inside a Docker container and expose it on port 8501. You can access the app by opening your browser and navigating to http://localhost:8501.
 
 ## Screenshots
 
