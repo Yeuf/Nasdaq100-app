@@ -89,131 +89,74 @@ st.write('Data dimension: ' + str(df_selected_sector.shape[0]) + 'rows and ' + s
 
 st.dataframe(df_selected_sector)
 
-plt.style.use('seaborn-v0_8')
-# Define a function to plot PeG ratio for companies in a selected sector.
+plt.style.use('seaborn-v0_8-dark')
 
-def peg_plot():
-    # Get the list of company symbols and their PeG ratios from the selected sector dataframe
+def ratio_plot(ratio):
+    # Get the list of company symbols and their ratios from the selected sector dataframe
     symbol = list(df_selected_sector.Ticker)
-    peg_ratio = list(df_selected_sector.PegRatio)
+    ratio_values = list(df_selected_sector[ratio])
+
+    fig = plt.figure()  # Initialize the figure
     
-    # Check if the number of companies is less than or equal to 10
+    # Check if the number of companies is less than or equal to 15
     if len(symbol) <= 15:
-        fig, ax = plt.subplots()
+        # Create a bar plot of ratios for each company
+        ax = sns.barplot(x=symbol, y=ratio_values, palette=['tab:grey', 'tan', 'tab:brown', 'steelblue'])
 
-        # Plot a horizontal line representing the mean PeG ratio across the industry
-        ax.axhline(df_selected_sector.PegRatio.mean(), color='rebeccapurple', label='Mean peg ratio across industry')
-
-        # Create a bar plot of PeG ratios for each company
-        bar = sns.barplot(x=symbol, y=peg_ratio, palette=['tab:grey', 'tan', 'tab:brown', 'steelblue'])
+        # Add a horizontal line representing the mean ratio across the industry
+        ax.axhline(df_selected_sector[ratio].mean(), color='rebeccapurple', label='Mean ratio across industry')
 
         # Add labels to the bars
-        for rect in bar.patches:
+        for rect in ax.patches:
             height = rect.get_height()
-            ax.text(rect.get_x() + rect.get_width() / 2, height, height, ha='center', va='bottom')
+            ax.text(rect.get_x() + rect.get_width() / 2, height, f'{height:.2f}', ha='center', va='bottom')
 
         ax.set_xlabel('Company')
-        ax.set_ylabel('PeG Ratio')
+        ax.set_ylabel(ratio)
         ax.tick_params(axis='x', labelsize=7)
-        ax.text(1.02, df_selected_sector.PegRatio.mean(), round(df_selected_sector.PegRatio.mean(), 2), va='center', transform=ax.get_yaxis_transform())
+        ax.text(1.02, df_selected_sector[ratio].mean(), f'{round(df_selected_sector[ratio].mean(), 2):.2f}',
+                va='center', transform=ax.get_yaxis_transform())
         ax.legend()
     else:
-        # Create two subplots if the number of companies is greater than 10
+        # Create two subplots if the number of companies is greater than 15
         fig, (ax1, ax2) = plt.subplots(2, 1)
 
-        # Plot a horizontal line representing the mean PeG ratio across the industry in both subplots
-        ax1.axhline(df_selected_sector.PegRatio.mean(), color='rebeccapurple', label='Mean peg ratio across industry')
-        ax2.axhline(df_selected_sector.PegRatio.mean(), color='rebeccapurple', label='Mean peg ratio across industry')
+        # Create bar plots of ratios for each company in both subplots
+        bar1 = sns.barplot(x=symbol[:15], y=ratio_values[:15], palette=['tab:grey', 'tan', 'tab:brown', 'steelblue'], ax=ax1)
+        bar2 = sns.barplot(x=symbol[15:30], y=ratio_values[15:30], palette=['tab:grey', 'tan', 'tab:brown', 'steelblue'], ax=ax2)
 
-        # Create bar plots of PeG ratios for each company in both subplots
-        bar1 = sns.barplot(x=symbol[:15], y=peg_ratio[:15], palette=['tab:grey', 'tan', 'tab:brown', 'steelblue'], ax=ax1)
-        bar2 = sns.barplot(x=symbol[15:30], y=peg_ratio[15:30], palette=['tab:grey', 'tan', 'tab:brown', 'steelblue'], ax=ax2)
+        # Add horizontal lines representing the mean ratio across the industry in both subplots
+        ax1.axhline(df_selected_sector[ratio].mean(), color='rebeccapurple', label='Mean ratio across industry')
+        ax2.axhline(df_selected_sector[ratio].mean(), color='rebeccapurple', label='Mean ratio across industry')
 
         # Add labels to the bars in both subplots
         for rect in bar1.patches:
             height = rect.get_height()
-            ax1.text(rect.get_x() + rect.get_width() / 2, height, height, ha='center', va='bottom')
+            ax1.text(rect.get_x() + rect.get_width() / 2, height, f'{height:.2f}', ha='center', va='bottom')
         
         for rect in bar2.patches:
             height = rect.get_height()
-            ax2.text(rect.get_x() + rect.get_width() / 2, height, height, ha='center', va='bottom')
+            ax2.text(rect.get_x() + rect.get_width() / 2, height, f'{height:.2f}', ha='center', va='bottom')
 
         ax1.set_xlabel('Company')
-        ax1.set_ylabel('PeG Ratio')
-        ax1.text(1.02, df_selected_sector.PegRatio.mean(), round(df_selected_sector.PegRatio.mean(), 2), va='center', transform=ax1.get_yaxis_transform())
+        ax1.set_ylabel(ratio)
+        ax1.text(1.02, df_selected_sector[ratio].mean(), f'{round(df_selected_sector[ratio].mean(), 2):.2f}',
+                 va='center', transform=ax1.get_yaxis_transform())
         ax1.legend()
 
         ax2.set_xlabel('Company')
-        ax2.set_ylabel('PeG Ratio')
-        ax2.text(1.02, df_selected_sector.PegRatio.mean(), round(df_selected_sector.PegRatio.mean(), 2), va='center', transform=ax2.get_yaxis_transform())
+        ax2.set_ylabel(ratio)
+        ax2.text(1.02, df_selected_sector[ratio].mean(), f'{round(df_selected_sector[ratio].mean(), 2):.2f}',
+                 va='center', transform=ax2.get_yaxis_transform())
         ax2.legend()
 
         fig.tight_layout()
-    return st.pyplot(fig)
-
-
-def FPE_plot():
-    # Get the list of company symbols and their Forward P/E ratios from the selected sector dataframe
-    symbol = list(df_selected_sector.Ticker)
-    FPE_ratio = list(df_selected_sector.ForwardPE)
     
-    # Check if the number of companies is less than or equal to 10
-    if len(symbol) <= 15:
-        fig, ax = plt.subplots()
-
-        # Plot a horizontal line representing the mean Forward P/E ratio across the industry
-        ax.axhline(df_selected_sector.ForwardPE.mean(), color='rebeccapurple', label='Mean Forward P/E ratio across industry')
-
-        # Create a bar plot of Forward P/E ratios for each company
-        bar = sns.barplot(x=symbol, y=FPE_ratio, palette=['tab:grey', 'tan', 'tab:brown', 'steelblue'])
-
-        # Add labels to the bars
-        for rect in bar.patches:
-            height = rect.get_height()
-            ax.text(rect.get_x() + rect.get_width() / 2, height, height, ha='center', va='bottom')
-
-        ax.set_xlabel('Company')
-        ax.set_ylabel('Forward P/E Ratio')
-        ax.tick_params(axis='x', labelsize=7)
-        ax.text(1.02, df_selected_sector.ForwardPE.mean(), round(df_selected_sector.ForwardPE.mean(), 2), va='center', transform=ax.get_yaxis_transform())
-        ax.legend()
-    else:
-        # Create two subplots if the number of companies is greater than 10
-        fig, (ax1, ax2) = plt.subplots(2, 1)
-
-        # Plot a horizontal line representing the mean Forward P/E ratio across the industry in both subplots
-        ax1.axhline(df_selected_sector.ForwardPE.mean(), color='rebeccapurple', label='Mean Forward P/E ratio across industry')
-        ax2.axhline(df_selected_sector.ForwardPE.mean(), color='rebeccapurple', label='Mean Forward P/E ratio across industry')
-
-        # Create bar plots of Forward P/E ratios for each company in both subplots
-        bar1 = sns.barplot(x=symbol[:15], y=FPE_ratio[:15], palette=['tab:grey', 'tan', 'tab:brown', 'steelblue'], ax=ax1)
-        bar2 = sns.barplot(x=symbol[15:30], y=FPE_ratio[15:30], palette=['tab:grey', 'tan', 'tab:brown', 'steelblue'], ax=ax2)
-
-        # Add labels to the bars in both subplots
-        for rect in bar1.patches:
-            height = rect.get_height()
-            ax1.text(rect.get_x() + rect.get_width() / 2, height, height, ha='center', va='bottom')
-        
-        for rect in bar2.patches:
-            height = rect.get_height()
-            ax2.text(rect.get_x() + rect.get_width() / 2, height, height, ha='center', va='bottom')
-
-        ax1.set_xlabel('Company')
-        ax1.set_ylabel('Forward P/E Ratio')
-        ax1.text(1.02, df_selected_sector.ForwardPE.mean(), round(df_selected_sector.ForwardPE.mean(), 2), va='center', transform=ax1.get_yaxis_transform())
-        ax1.legend()
-
-        ax2.set_xlabel('Company')
-        ax2.set_ylabel('Forward P/E Ratio')
-        ax2.text(1.02, df_selected_sector.ForwardPE.mean(), round(df_selected_sector.ForwardPE.mean(), 2), va='center', transform=ax2.get_yaxis_transform())
-        ax2.legend()
-
-        fig.tight_layout()
     return st.pyplot(fig)
 
 
 st.header('PEG Ratio over mean accros industry')
-peg_plot()
+ratio_plot("PegRatio")
 
 st.header('Forward P/E Ratio over mean accros industry')
-FPE_plot()
+ratio_plot("ForwardPE")
