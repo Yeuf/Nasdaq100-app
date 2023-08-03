@@ -63,14 +63,14 @@ def load_data():
 df = load_data()
 
 # Get a sorted list of unique industries from the data and add a selectbox to the sidebar to select an industry
-sorted_industry = sorted(df['GICS Sector'].unique())
+sorted_industry = sorted(df['GICS Sector'].unique(), key=str)
 selected_industry = st.sidebar.selectbox('Industry', options=sorted_industry)
 df_selected_industry = df[ (df['GICS Sector'].str.contains(str(selected_industry))) ]
 
 # # Group the data by ticker and get a sorted list of unique tickers from the selected industry. Add a multiselect to the sidebar to select multiple tickers.
 ticker = df_selected_industry.groupby('Ticker')
 
-sorted_ticker_unique = sorted(df_selected_industry['Ticker'].unique())
+sorted_ticker_unique = sorted(df_selected_industry['Ticker'].unique(), key=str)
 selected_ticker = st.sidebar.multiselect('Ticker', sorted_ticker_unique, sorted_ticker_unique)
                                          
 
@@ -79,7 +79,7 @@ df_selected_ticker = df[ (df['Ticker'].isin(selected_ticker)) ]
 # # Get a sorted list of unique sectors from selected tickers and add a multiselect to the sidebar to select multiple sectors.
 sector = df_selected_ticker.groupby('GICS Sub-Industry')
 
-sorted_sector_unique = sorted(df_selected_ticker['GICS Sub-Industry'].unique())
+sorted_sector_unique = sorted(df_selected_ticker['GICS Sub-Industry'].unique(), key=str)
 selected_sector = st.sidebar.multiselect('Sector', sorted_sector_unique, sorted_sector_unique)
 
 df_selected_sector = df_selected_ticker[ (df_selected_ticker['GICS Sub-Industry'].isin(selected_sector)) ]
